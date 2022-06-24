@@ -1,22 +1,25 @@
 
-from array import array
 from math import sqrt
 
-class Cities:
+CaminhoDoCaixeiro = list[tuple[float, float]]
 
-    def __init__(self, cordenadas):
-        if len(cordenadas) % 2 == 0:
-            self.cordenadas_array: array = array('f', cordenadas)
-            self.cities_quantidade =  len(cordenadas) / 2
-        else:
-            raise Exception('A quantidade de cordenadas deve ser um número par')
-    
-    def obtem_distancia(self, origem_indice: int, destino_indice: int) -> int:
-        origem_x, origem_y = self.cordenadas_array[origem_indice * 2],  self.cordenadas_array[(origem_indice * 2) + 1]
-        destino_x, destino_y = self.cordenadas_array[destino_indice * 2],  self.cordenadas_array[(destino_indice * 2) + 1]
-        return sqrt(
-            ((destino_x - origem_x) ** 2) + ((destino_y - origem_y) ** 2)
-        )
-    
-    def obtem_quantidade_de_cidades(self):
-        return self.cities_quantidade
+def separa_cordenadas(pares: CaminhoDoCaixeiro) -> tuple[list[float], list[float]]:
+    xs = []
+    ys = []
+    for x, y in pares:
+        xs.append(x)
+        ys.append(y)
+    return xs, ys
+
+def obtem_distancia(caminho: CaminhoDoCaixeiro, ponto_inicial_index: int, ponto_final_index: int) -> float:
+    x_i, y_i = caminho[ponto_inicial_index]
+    x_f, y_f = caminho[ponto_final_index]
+    return sqrt(
+        ((x_f - x_i) ** 2) + ((y_f - y_i) ** 2)
+    )
+
+def obtem_custo(caminho: CaminhoDoCaixeiro) -> float:
+    custo_total = 0.0
+    for i in range(0, len(caminho) - 1):
+        custo_total += obtem_distancia(caminho, i, i + 1)
+    return custo_total

@@ -20,6 +20,7 @@ def desenha_ponto_inicial(ax, solucao):
 
 def desenha_solucao(solucao: CaminhoDoCaixeiro, title: str, file_path: str):
     fig, ax = plt.subplots()
+    fig.set_size_inches(10, 10)
     desenha_pontos(ax, solucao)
     desenha_ponto_inicial(ax, solucao)
     desenha_caminho(ax, solucao)

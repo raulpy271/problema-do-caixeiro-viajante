@@ -25,3 +25,4 @@ def desenha_solucao(solucao: CaminhoDoCaixeiro, title: str, file_path: str):
     desenha_caminho(ax, solucao)
     ax.set_title(f'{title} - Custo: {obtem_custo(solucao)}')
     fig.savefig(file_path)
+    plt.close('all')

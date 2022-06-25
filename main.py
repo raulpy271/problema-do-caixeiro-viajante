@@ -1,5 +1,5 @@
 
-from uuid import uuid1
+from random import shuffle
 
 from src.tsp_file_reader import reader
 from src.subida_encosta import busca
@@ -7,14 +7,13 @@ from src.renderiza_caminho import desenha_solucao
 
 
 if __name__ == '__main__':
-    path = 'data-samples/wi29.tsp'
-
-    c1 = [(0, 0), (0, 1), (1, 1)]
+    path = 'data-samples/qa194.tsp'
 
     _, caminho = reader(path)
 
-    solution = busca(caminho)
+    shuffle(caminho)
 
-    id = str(uuid1())
+    solucao = busca(caminho)
 
-    desenha_solucao(caminho, id, f'result.png')
+    desenha_solucao(caminho, 'inicial', 'result_inicial.png')
+    desenha_solucao(solucao, 'final', 'result_final.png')

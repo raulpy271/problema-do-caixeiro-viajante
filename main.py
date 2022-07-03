@@ -4,8 +4,9 @@ from random import shuffle
 import matplotlib.pyplot as plt
 
 from src.tsp_file_reader import reader
-from src.subida_encosta import busca
-from src.renderiza_caminho import desenha_solucao, desenha_pontos
+from src import subida_encosta
+from src import tempera_simulada
+from src.renderiza_caminho import desenha_solucao, desenha_pontos, desenha_grafico_de_custos
 
 PATHS = [
     'data-samples/wi29.tsp',
@@ -22,14 +23,15 @@ def gera_mapas_de_pontos():
         plt.close('all')
 
 def gera_solucoes():
-    numero_de_tentantivas = 2
     caminhos = list(map(lambda path: reader(path)[1], PATHS))
-    for tentativa in range(numero_de_tentantivas):
-        for caminho_index, caminho in enumerate(caminhos):
-            shuffle(caminho)
-            solucao = busca(caminho)
-            desenha_solucao(caminho, f'inicial {tentativa}', f'{PATHS[caminho_index]}_inicial_{tentativa}.png')
-            desenha_solucao(solucao, f'final {tentativa}',   f'{PATHS[caminho_index]}_final_{tentativa}.png')
+    for caminho_index, caminho in enumerate(caminhos):
+        shuffle(caminho)
+        solucao_subida_encosta = subida_encosta.busca(caminho)
+        solucao_tempera_simulada, tempera_simulada_custos = tempera_simulada.busca(caminho)
+        desenha_solucao(caminho, 'inicial', f'{PATHS[caminho_index]}_inicial.png')
+        desenha_solucao(solucao_subida_encosta, 'final subida encosta', f'{PATHS[caminho_index]}_final_subida_encosta.png')
+        desenha_solucao(solucao_tempera_simulada, 'final tempera simulada', f'{PATHS[caminho_index]}_final_tempera_simulada.png')
+        desenha_grafico_de_custos(tempera_simulada_custos, 'custos tempera simulada', f'{PATHS[caminho_index]}_custo_tempera_simulada.png')
 
 if __name__ == '__main__':
     gera_solucoes()

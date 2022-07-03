@@ -27,3 +27,14 @@ def desenha_solucao(solucao: CaminhoDoCaixeiro, title: str, file_path: str):
     ax.set_title(f'{title} - Custo: {obtem_custo(solucao)}')
     fig.savefig(file_path)
     plt.close('all')
+
+def desenha_grafico_de_custos(custos: list[float], title: str, file_path: str):
+    fig, ax = plt.subplots()
+    fig.set_size_inches(10, 10)
+    ax.plot(
+        list(range(1, len(custos) + 1)),
+        custos
+    )
+    ax.set_title(title)
+    fig.savefig(file_path)
+    plt.close('all')

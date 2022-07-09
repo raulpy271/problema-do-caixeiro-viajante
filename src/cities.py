@@ -22,4 +22,15 @@ def obtem_custo(caminho: CaminhoDoCaixeiro) -> float:
     custo_total = 0.0
     for i in range(0, len(caminho) - 1):
         custo_total += obtem_distancia(caminho, i, i + 1)
+    custo_total += obtem_distancia(caminho, 0, len(caminho) - 1)
     return custo_total
+
+def seleciona_melhor_caminho(caminhos: list[CaminhoDoCaixeiro]) -> CaminhoDoCaixeiro:
+    melhor_caminho = caminhos[0]
+    melhor_custo = obtem_custo(melhor_caminho)
+    for i in range(1, len(caminhos)):
+        custo = obtem_custo(caminhos[i])
+        if custo < melhor_custo:
+            melhor_custo = custo
+            melhor_caminho = caminhos[i]
+    return melhor_caminho

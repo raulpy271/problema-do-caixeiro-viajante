@@ -1,17 +1,7 @@
 
-from src.cities import CaminhoDoCaixeiro, obtem_custo
+from src.cities import CaminhoDoCaixeiro, obtem_custo, seleciona_melhor_caminho
 from src.heuristica import gera_vizinhos_apartir_de_heuristica
 
-
-def seleciona_melhor_caminho(caminhos: list[CaminhoDoCaixeiro]) -> CaminhoDoCaixeiro:
-    melhor_caminho = caminhos[0]
-    melhor_custo = obtem_custo(melhor_caminho)
-    for i in range(1, len(caminhos)):
-        custo = obtem_custo(caminhos[i])
-        if custo < melhor_custo:
-            melhor_custo = custo
-            melhor_caminho = caminhos[i]
-    return melhor_caminho
 
 def busca(caminho_inicial: CaminhoDoCaixeiro) -> CaminhoDoCaixeiro:
     caminho = caminho_inicial.copy()

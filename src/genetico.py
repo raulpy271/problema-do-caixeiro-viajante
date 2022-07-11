@@ -3,7 +3,7 @@ from random import choice, choices, randint, shuffle
 from math import sqrt
 
 from src.cities import CaminhoDoCaixeiro, seleciona_melhor_caminho, obtem_custo
-from src.renderiza_caminho import desenha_solucao
+
 
 def busca_indice_de_cidade(solucao: CaminhoDoCaixeiro, par_buscado: tuple[float, float]) -> int:
     indice = -1
@@ -36,6 +36,17 @@ def reproduz(pai: CaminhoDoCaixeiro, mae: CaminhoDoCaixeiro) -> tuple[CaminhoDoC
     filho_2[indice_vizinho_mae] = pai[indice_vizinho_pai]
     return filho_1, filho_2 
 
+def realiza_mutacao_individual(individuo: CaminhoDoCaixeiro) -> CaminhoDoCaixeiro:
+    tamanho_do_pedaco = 4
+    pedaco_de_genes_inicio_index = randint(0, len(individuo) - tamanho_do_pedaco)
+    genes = []
+    for i in range(pedaco_de_genes_inicio_index, pedaco_de_genes_inicio_index + tamanho_do_pedaco):
+        genes.append(individuo[i])
+    shuffle(genes)
+    for i in range(0, tamanho_do_pedaco):
+        individuo[pedaco_de_genes_inicio_index + i] = genes[i]
+    return individuo
+
 def gera_populacao_inicial(solucao_inicial: CaminhoDoCaixeiro, tamanho_populacao: int) -> list[CaminhoDoCaixeiro]:
     populacao = []
     for _ in range(tamanho_populacao):
@@ -46,7 +57,7 @@ def gera_populacao_inicial(solucao_inicial: CaminhoDoCaixeiro, tamanho_populacao
 
 def seleciona_mais_aptos_para_reproducao(populacao: list[CaminhoDoCaixeiro]) -> list[CaminhoDoCaixeiro]:
     nova_populacao = []
-    individuos_escolhidos_aleatoriamente = int(sqrt(len(populacao)))
+    individuos_escolhidos_aleatoriamente = 2
     for _ in range(len(populacao)):
         filhos = choices(populacao, k=individuos_escolhidos_aleatoriamente)
         melhor_filho = seleciona_melhor_caminho(filhos)
@@ -66,11 +77,16 @@ def realiza_reproducao_de_populacao(populacao: list[CaminhoDoCaixeiro]) -> list[
     return nova_populacao
 
 def adiciona_mutacao_aleatoriamente(populacao: list[CaminhoDoCaixeiro]) -> list[CaminhoDoCaixeiro]:
-    return populacao
+    porcentagem_de_mutacao = 0.2
+    nova_populacao = populacao.copy()
+    for _ in range(int(len(populacao) * porcentagem_de_mutacao)):
+        individuo_index = randint(0, len(nova_populacao) - 1)
+        nova_populacao[individuo_index] = realiza_mutacao_individual(nova_populacao[individuo_index])
+    return nova_populacao
 
 def busca_genetica(solucao_inicial: CaminhoDoCaixeiro) -> CaminhoDoCaixeiro:
-    tamanho_populacao = 100
-    maximo_de_geracoes_sem_progresso = 10
+    tamanho_populacao = 500
+    maximo_de_geracoes_sem_progresso = 50
     geracoes_sem_progresso = 0
     populacao = gera_populacao_inicial(solucao_inicial, tamanho_populacao)
     mais_apto_geracao_atual = seleciona_melhor_caminho(populacao)
@@ -79,7 +95,6 @@ def busca_genetica(solucao_inicial: CaminhoDoCaixeiro) -> CaminhoDoCaixeiro:
     custo_mais_apto = custo_mais_apto_geracao_atual
     i = 0
     while geracoes_sem_progresso < maximo_de_geracoes_sem_progresso:
-        desenha_solucao(mais_apto_geracao_atual, str(i), 'frames/frame_%03d.png' % i)
         print(f'Mais apto global: {custo_mais_apto}')
         print(f'Mais apto atual: {custo_mais_apto_geracao_atual}')
         print(f'sem progresso: {geracoes_sem_progresso}')
@@ -95,4 +110,5 @@ def busca_genetica(solucao_inicial: CaminhoDoCaixeiro) -> CaminhoDoCaixeiro:
             mais_apto = mais_apto_geracao_atual
             custo_mais_apto = custo_mais_apto_geracao_atual
         i += 1
+    print(f'Passos: {i}')
     return mais_apto

@@ -12,9 +12,7 @@ def seleciona_caminho_aleatorio(caminhos: list[CaminhoDoCaixeiro]) -> CaminhoDoC
 def busca(caminho_inicial: CaminhoDoCaixeiro, temperatura: int = 10000, fator_esfriamento: float = 0.995) -> tuple[CaminhoDoCaixeiro, list[float]]:
     caminho = caminho_inicial.copy()
     custo_atual = obtem_custo(caminho)
-    custos = []
     while temperatura != 0:
-        custos.append(custo_atual)
         print(f'Custo atual: {custo_atual}, temperatura: {temperatura}')
         caminhos_vizinhos = gera_vizinhos_apartir_de_heuristica(caminho)
         vizinho_aleatorio = seleciona_caminho_aleatorio(caminhos_vizinhos)
@@ -35,5 +33,5 @@ def busca(caminho_inicial: CaminhoDoCaixeiro, temperatura: int = 10000, fator_es
                 caminho = vizinho_aleatorio
                 custo_atual = custo_vizinho
         temperatura = int(temperatura * fator_esfriamento)
-    return caminho, custos
+    return caminho
      

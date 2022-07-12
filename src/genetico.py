@@ -1,6 +1,5 @@
 
 from random import choice, choices, randint, shuffle
-from math import sqrt
 
 from src.cities import CaminhoDoCaixeiro, seleciona_melhor_caminho, obtem_custo
 
@@ -38,13 +37,22 @@ def reproduz(pai: CaminhoDoCaixeiro, mae: CaminhoDoCaixeiro) -> tuple[CaminhoDoC
 
 def realiza_mutacao_individual(individuo: CaminhoDoCaixeiro) -> CaminhoDoCaixeiro:
     tamanho_do_pedaco = 4
-    pedaco_de_genes_inicio_index = randint(0, len(individuo) - tamanho_do_pedaco)
+    quantidade_de_genes = len(individuo)
+    pedaco_de_genes_inicio_index = randint(0, quantidade_de_genes - 1)
     genes = []
-    for i in range(pedaco_de_genes_inicio_index, pedaco_de_genes_inicio_index + tamanho_do_pedaco):
+    i = pedaco_de_genes_inicio_index
+    for _ in range(tamanho_do_pedaco):
         genes.append(individuo[i])
+        i += 1
+        if i == quantidade_de_genes:
+            i = 0
     shuffle(genes)
-    for i in range(0, tamanho_do_pedaco):
-        individuo[pedaco_de_genes_inicio_index + i] = genes[i]
+    i = pedaco_de_genes_inicio_index
+    for gene in genes:
+        individuo[i] = gene
+        i += 1
+        if i == quantidade_de_genes:
+            i = 0
     return individuo
 
 def gera_populacao_inicial(solucao_inicial: CaminhoDoCaixeiro, tamanho_populacao: int) -> list[CaminhoDoCaixeiro]:
@@ -84,7 +92,7 @@ def adiciona_mutacao_aleatoriamente(populacao: list[CaminhoDoCaixeiro]) -> list[
         nova_populacao[individuo_index] = realiza_mutacao_individual(nova_populacao[individuo_index])
     return nova_populacao
 
-def busca_genetica(solucao_inicial: CaminhoDoCaixeiro) -> CaminhoDoCaixeiro:
+def busca(solucao_inicial: CaminhoDoCaixeiro) -> CaminhoDoCaixeiro:
     tamanho_populacao = 500
     maximo_de_geracoes_sem_progresso = 50
     geracoes_sem_progresso = 0
